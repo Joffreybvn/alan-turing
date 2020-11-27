@@ -15,7 +15,7 @@ class GoogleMeetMessage(Message):
         thumbnail="https://i.imgur.com/ehlNUYU.png"
     )
 
-    message = f"%s démarre dans **%s minutes** sur **Google Meet**"
+    message = f"%s démarre dans **%s minutes** sur **Google Meet**: https://g.co/meet/hfe-twue-vsb"
 
     def __init__(self, event_name: str, delay: int) -> None:
         """

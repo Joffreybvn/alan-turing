@@ -80,11 +80,12 @@ class Reminder:
         # Sort the messages by higher weight to smaller weight
         sorted_messages = dict(sorted(messages.items(), key=operator.itemgetter(0), reverse=True))
 
+        # Capitalize first word of each tense
         texts = []
-
         for message in sorted_messages.values():
             texts.append(self.__to_uppercase(message.get_message()))
 
+        # Add punctuation and merge tenses
         message_text = ". ".join(texts) + " !"
 
         return message_text, message_embed

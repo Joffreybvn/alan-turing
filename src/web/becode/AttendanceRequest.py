@@ -5,11 +5,11 @@ from src.web.becode import Periods, Locations
 from threading import Thread
 
 # Debug values:
-# import http.client
-# URL = "https://postman-echo.com/post"
-# http.client.HTTPConnection.debuglevel = 1
+import http.client
+URL = "https://postman-echo.com/post"
+http.client.HTTPConnection.debuglevel = 1
 
-URL = "https://graph.becode.org/"
+# URL = "https://graph.becode.org/"
 
 
 class AttendanceRequest(Thread):
