@@ -5,7 +5,7 @@ from src.scheduler.messages import Card, MessageWeight
 import time
 import random
 import operator
-from discord import Embed, Message
+from discord import Message
 from pytz import timezone
 from typing import NamedTuple, Tuple, List, Union
 from src.scheduler.messages import Message
@@ -96,6 +96,7 @@ class Reminder:
         for message in self.messages:
             if message.weight == MessageWeight.ATTENDANCE:
 
+                # Get the attendance details from AttendanceMessage.py
                 return message.get_attendance_details()
 
     @staticmethod

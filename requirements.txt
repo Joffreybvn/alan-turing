@@ -3,3 +3,5 @@ pytz
 apscheduler
 pandas
 discord.py
+dnspython
+pymongo==3.11.1

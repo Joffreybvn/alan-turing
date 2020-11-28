@@ -1,92 +1,95 @@
 
-import pickle
-import os.path
-import pandas as pd
-from typing import Any, Union
-from dataclasses import dataclass
-
-
-DB_PATH = './db/database.p'
-
-
-@dataclass
-class Entry:
-    """Default database entry, used for new users."""
-    user: str
-    notification: bool = False
-    token: str = None
-
-    def get_list(self):
-        return [self.user, self.notification, self.token]
+from typing import Union, List
+from pymongo import MongoClient
+from pymongo.errors import AutoReconnect, ConnectionFailure, DuplicateKeyError, ExecutionTimeout, OperationFailure
 
 
 class Database:
+    """
+    Small database used to store the becode token and
+    if a user want to receive notifications or not.
+    """
 
-    empty = pd.DataFrame(columns=['user', 'notification', 'token'])
+    def __init__(self, db_host: str, db_password: str) -> None:
 
-    def __init__(self) -> None:
-        """Small database used to store if a user want to be notified or not."""
+        # Connect to MongoDB
+        self.client = MongoClient(f"mongodb+srv://dbUser:{db_password}@{db_host}")
+        self.db = self.client.discord_db
 
-        self.db = self.__initialize_db()
-
-    def __create(self, user: str) -> bool:
+    def create(self, user_id: int, send_notification: bool = False, becode_token: str = None) -> bool:
         """
         Create a new user to the database.
 
-        :param user: The user to add to the database.
+        :param becode_token:
+        :param send_notification:
+        :param user_id: The user to add to the database.
         :return: True if the user was added. False if not.
         """
 
-        if user not in self.db.values:
+        # Avoid send_notification to be None:
+        if send_notification is None:
+            send_notification = False
 
-            self.db.loc[len(self.db)] = Entry(user=user).get_list()
-            return True
+        # Insert a new user into the database
+        try:
+            self.db.users.insert_one({
+                "_id": user_id,
+                "send_notification": send_notification,
+                "becode_token": becode_token
+            })
 
-        return False
+        # TODO: Write a decorator
+        # Return False if the operation fail
+        except (AutoReconnect, ConnectionFailure, DuplicateKeyError,
+                ExecutionTimeout, OperationFailure):
+            return False
 
-    def update(self, user: str, field: str, value: Any) -> None:
-        """Update the desired user with the given notification status."""
+        return True
 
-        # Create the user if it doesn't exists
-        if user not in self.db.values:
-            status = self.__create(user)
+    def update(self, user_id: int, send_notification: bool = None, becode_token: str = None) -> bool:
+        """Update a given user with the given values."""
 
-        # Update the desired field
-        self.db.loc[self.db['user'] == user, field] = value
+        # If the user doesn't exists, create it
+        if self.db.users.find_one({'_id': user_id}) is None:
+            return self.create(user_id, send_notification, becode_token)
 
-        # Save the database to the disk
-        self.__save_db()
+        else:
+            # Create the update dictionary
+            to_set = dict()
 
-    def get_users_to_mention(self):
+            # Add send_notification to the update
+            if send_notification is not None:
+                to_set['send_notification'] = send_notification
+
+            # Add becode_token to the update
+            if send_notification is not None:
+                to_set['becode_token'] = becode_token
+
+            # Update the user
+            self.db.users.update_one({'_id': user_id}, {'$set': to_set})
+            return True  # TODO: Implement a return of the request's outcome
+
+    def get_users_to_mention(self) -> List[int]:
         """Return a list of all user to notify on reminders."""
 
-        notified = self.db[self.db['notification'] == True]
-        return notified['user'].values.tolist()
+        # Get the users' _id with "send_notification" to True
+        notified = self.db.users.find(
+            {'send_notification': True},
+            {'_id': 1}
+        )
 
-    def get_token(self, user: str) -> Union[str, None]:
+        # Return a list of all users' _id
+        return [entry['_id'] for entry in list(notified)]
+
+    def get_token(self, user_id: int) -> Union[str, None]:
         """Return the token of a given user."""
 
-        user_data = self.db[self.db['user'] == user]
-        return user_data['token'].values.tolist()
+        # Query the given user and get the token
+        result = self.db.users.find_one(
+            {'_id': user_id},
+            {'_id': 0, 'becode_token': 1}
+        )
 
-    def __initialize_db(self):
-        """Initialize the database once this class is instantiated."""
+        # Return the token or None if missing
+        return result.get('becode_token', None)
 
-        # If a database already exists, load it.
-        if os.path.isfile(DB_PATH):
-            return self.__load_db()
-
-        # Else, return a new default one.
-        else:
-            return Database.empty
-
-    def __save_db(self) -> None:
-        """Save the database into a "database.p" file."""
-
-        pickle.dump(self.db, open(DB_PATH, "wb"))
-
-    @staticmethod
-    def __load_db():
-        """Load and return the database from a "database.p" file."""
-
-        return pickle.load(open(DB_PATH, "rb"))

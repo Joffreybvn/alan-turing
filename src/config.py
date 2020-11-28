@@ -18,11 +18,13 @@ class Config:
         self.discord = Bot(command_prefix='!')
 
         # Database
-        self.db = Database()
+        db_host = environ.get('DB_HOST')
+        db_password = environ.get('DB_PASSWORD')
+        self.db = Database(db_host, db_password)
 
         # Attendance globals
         self.last_message = None
-        self.last_attendance = None  # Attendance (Period, at_home), see >> AttendanceMessage.py
+        self.last_attendance = None  # Period, see >> AttendanceMessage.py
 
 
 config = Config()

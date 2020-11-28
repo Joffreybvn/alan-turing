@@ -23,11 +23,11 @@ class Commands:
             """User command to activate mentions on appointment reminders."""
 
             # Retrieve the user
-            mention = context.message.author.mention
-            author = self.get_author_id(mention)
+            mention: str = context.message.author.mention
+            author: int = self.get_author_id(mention)
 
             # Update the database
-            config.db.update(author, 'notification', True)
+            config.db.update(author, send_notification=True)
 
             # Log and send a confirmation to user
             print(f"[!] Mention added: {author} will receive mentions on reminders.")
@@ -38,11 +38,11 @@ class Commands:
             """User command to deactivate mentions on appointment reminders."""
 
             # Retrieve the user
-            mention = context.message.author.mention
-            author = self.get_author_id(mention)
+            mention: str = context.message.author.mention
+            author: int = self.get_author_id(mention)
 
             # Update the database
-            config.db.update(author, 'notification', False)
+            config.db.update(author, send_notification=False)
 
             # Log and send a confirmation to user
             print(f"[!] Mention added: {author} will stop receiving mentions on reminders.")
@@ -53,13 +53,13 @@ class Commands:
             """User command to add its token to the database."""
 
             # Retrieve the user
-            mention = context.message.author.mention
-            author = self.get_author_id(mention)
+            mention: str = context.message.author.mention
+            author: int = self.get_author_id(mention)
 
             if len(token) > 1:
 
                 # Update the database
-                config.db.update(author, 'token', token)
+                config.db.update(author, becode_token=token)
 
                 # Log and send a confirmation to user
                 print(f"[!] Token added: {author} added token: {token}")
@@ -87,20 +87,19 @@ class Commands:
                     print("[!] User added reaction.")
 
                     # Retrieve the token from the database
-                    mention = user.mention
-                    author = self.get_author_id(mention)
+                    mention: str = user.mention
+                    author: int = self.get_author_id(mention)
 
-                    token = config.db.get_token(author)
-
-                    if token:
-                        token = token[0]
+                    # Retrieve the token and check if it's not None
+                    if token := config.db.get_token(author):
+                        print(token)
 
                         # Send an attendance request to Becode
                         if config.last_attendance:
 
                             # Init and send the request
                             attendance = config.last_attendance
-                            request = AttendanceRequest(attendance[0], location, token)
+                            request = AttendanceRequest(attendance, location, token)
 
                             request.start()
                             request.join()
@@ -125,5 +124,5 @@ class Commands:
         config.discord.run(config.DISCORD_TOKEN)
 
     @staticmethod
-    def get_author_id(mention):
-        return re.sub(r'[<>!@]', '', mention)
+    def get_author_id(mention) -> int:
+        return int(re.sub(r'[<>!@]', '', mention))
