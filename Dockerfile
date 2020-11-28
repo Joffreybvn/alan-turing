@@ -7,7 +7,7 @@ RUN apt-get -y upgrade
 
 # Build-essentials is needed to execute gcc commands,
 # to build discord packages dependencies "multidict"
-RUN apt-get install build-essential
+RUN apt-get install -y build-essential
 
 # Remove all cached file. Get a smaller image
 RUN apt-get clean
