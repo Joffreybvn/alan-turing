@@ -1,6 +1,6 @@
 
-from src import config
-from src.web.becode import AttendanceRequest, Locations
+from src.bot import config
+from src.bot.becode import AttendanceRequest, Locations
 
 import re
 from typing import Union

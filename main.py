@@ -1,7 +1,7 @@
 
 from threading import Thread
-from src import Bot
-from src.webserver import partial_run
+from src.bot import Bot
+from src.api.api import partial_run
 
 
 if __name__ == "__main__":

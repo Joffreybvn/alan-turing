@@ -1,7 +1,7 @@
 
 from copy import copy
-from src.scheduler.messages import Message, Card, MessageWeight
-from src.web.becode import Periods
+from src.bot.scheduler.messages import Message, Card, MessageWeight
+from src.bot.becode import Periods
 
 # my.becode.org URL
 URL = "https://my.becode.org"

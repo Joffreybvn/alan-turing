@@ -1,6 +1,6 @@
 
-from src import config
-from src.scheduler.messages import Card, MessageWeight
+from src.bot import config
+from src.bot.scheduler.messages import Card, MessageWeight
 
 import time
 import random
@@ -8,7 +8,7 @@ import operator
 from discord import Message
 from pytz import timezone
 from typing import NamedTuple, Tuple, List, Union
-from src.scheduler.messages import Message
+from src.bot.scheduler.messages import Message
 from datetime import datetime
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 

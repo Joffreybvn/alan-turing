@@ -1,5 +1,5 @@
 
-from src.web.becode import Periods, Locations
+from src.bot.becode import Periods, Locations
 from dataclasses import dataclass
 
 

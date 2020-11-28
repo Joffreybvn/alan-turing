@@ -1,5 +1,5 @@
 
-from src.scheduler.messages import Message, Card, MessageWeight
+from src.bot.scheduler.messages import Message, Card, MessageWeight
 
 # Google meet URL
 URL = "https://meet.google.com/hfe-twue-vsb"

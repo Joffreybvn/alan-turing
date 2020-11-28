@@ -1,9 +1,9 @@
 
-from src.scheduler import Reminder
-from src.scheduler.messages import AttendanceMessage as Attendance
-from src.scheduler.messages import GoogleMeetMessage as Meet
-from src.scheduler.messages import PauseMessage as Pause
-from src.web.becode import Periods
+from src.bot.scheduler import Reminder
+from src.bot.scheduler.messages import AttendanceMessage as Attendance
+from src.bot.scheduler.messages import GoogleMeetMessage as Meet
+from src.bot.scheduler.messages import PauseMessage as Pause
+from src.bot.becode import Periods
 
 
 class Scheduler:

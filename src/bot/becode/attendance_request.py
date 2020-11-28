@@ -1,7 +1,7 @@
 
 import requests
-from src.web.becode import AttendanceJson
-from src.web.becode import Periods, Locations
+from src.bot.becode import AttendanceJson
+from src.bot.becode import Periods, Locations
 from threading import Thread
 
 # Debug values:

@@ -1,5 +1,5 @@
 
-from src.scheduler.messages import Message, MessageWeight
+from src.bot.scheduler.messages import Message, MessageWeight
 
 
 class PauseMessage(Message):

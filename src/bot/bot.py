@@ -1,6 +1,6 @@
 
-from src.commands import Commands
-from src.scheduler import Scheduler
+from src.bot.commands import Commands
+from src.bot.scheduler import Scheduler
 
 
 class Bot:
