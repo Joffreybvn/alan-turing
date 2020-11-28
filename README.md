@@ -21,4 +21,4 @@ their appointment, going to Google Meet, etc.
 
 ## TO DO:
 - Ajouter la différence masculin/féminin pour les noms des évènements
-- Permettre au bot de choisir le déterminant approprié lors de l'emploi de noms d'évènements.
+- Permettre au bot de choisir le déterminant approprié lors de l'emploi de noms d'évènements
