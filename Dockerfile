@@ -13,6 +13,9 @@ RUN rm -rf /var/lib/apt/lists/*
 COPY . /opt/app
 WORKDIR /opt/app
 
+# Upgrade pip
+RUN pip install --upgrade pip
+
 # Install python libraries
 RUN pip install -r requirements.txt
 
