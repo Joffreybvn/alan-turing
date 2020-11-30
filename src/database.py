@@ -62,7 +62,7 @@ class Database:
                 to_set['send_notification'] = send_notification
 
             # Add becode_token to the update
-            if send_notification is not None:
+            if becode_token is not None:
                 to_set['becode_token'] = becode_token
 
             # Update the user
