@@ -1,17 +1,15 @@
 
 from flask import Flask
-from functools import partial
-import os
 
-# https://gist.github.com/Peppermint777/c8465f9ce8b579a8ca3e78845309b832
-
-app = Flask(__name__)
-port = int(os.environ.get("PORT", 3000))
+# App blueprint imports
+from src.api.v1 import blueprint as blueprint_v1
 
 
-@app.route('/')
-def hello():
-    return "Hello World !"
+def create_api():
 
+    # Initialize the Flask server
+    flask = Flask(__name__)
 
-partial_run = partial(app.run, host="0.0.0.0", port=port, debug=False, use_reloader=False)
+    # Load the blueprints
+    flask.register_blueprint(blueprint_v1, url_prefix='/v1')
+    return flask

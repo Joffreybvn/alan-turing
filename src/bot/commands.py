@@ -1,8 +1,9 @@
 
-from src.bot import config
+from src import config
 from src.bot.becode import AttendanceRequest, Locations
 
 import re
+import secrets
 from typing import Union
 from discord import Reaction, User, Member
 
@@ -27,7 +28,7 @@ class Commands:
             author: int = self.get_author_id(mention)
 
             # Update the database
-            config.db.update(author, send_notification=True)
+            config.db.update({'_id': author}, send_notification=True)
 
             # Log and send a confirmation to user
             print(f"[!] Mention added: {author} will receive mentions on reminders.")
@@ -42,7 +43,7 @@ class Commands:
             author: int = self.get_author_id(mention)
 
             # Update the database
-            config.db.update(author, send_notification=False)
+            config.db.update({'_id': author}, send_notification=False)
 
             # Log and send a confirmation to user
             print(f"[!] Mention added: {author} will stop receiving mentions on reminders.")
@@ -59,7 +60,7 @@ class Commands:
             if len(token) > 1:
 
                 # Update the database
-                config.db.update(author, becode_token=token)
+                config.db.update({'_id': author}, becode_token=token)
 
                 # Log and send a confirmation to user
                 print(f"[!] Token added: {author} added token: {token}")
@@ -67,6 +68,23 @@ class Commands:
 
             else:
                 await context.send(f"{mention}, ton token n'est pas valide.")
+
+        @config.discord.command(name="config", pass_contexr=True)
+        async def config_(context) -> None:
+
+            # Retrieve the user
+            mention: str = context.message.author.mention
+            author: int = self.get_author_id(mention)
+
+            # Generate an authentication token
+            public_key = secrets.token_urlsafe(16)
+
+            # Update the database
+            config.db.update({'_id': author}, public_key=public_key)
+
+            # Log and send a confirmation to user
+            print(f"[!] User {author}  generated a auth key: {public_key}")
+            await context.send(f"Connecte-toi via ce lien pour modifier tes paramètres:\n\U000027A1 https://{config.settings_url}/{public_key}")
 
         @config.discord.event
         async def on_reaction_add(reaction: Reaction, user: Union[User, Member]):

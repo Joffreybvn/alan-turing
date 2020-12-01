@@ -1,5 +1,5 @@
 
-from src import Database
+from src.database import Database
 
 from discord.ext.commands import Bot
 from os import environ
@@ -25,6 +25,10 @@ class Config:
         # Attendance globals
         self.last_message = None
         self.last_attendance = None  # Period, see >> AttendanceMessage.py
+
+        # Site URL
+        self.base_url = "turingbot.ml"
+        self.settings_url = "my." + self.base_url
 
 
 config = Config()

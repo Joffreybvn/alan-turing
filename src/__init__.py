@@ -1,2 +1,2 @@
 
-from src.database import Database
+from src.config import config
