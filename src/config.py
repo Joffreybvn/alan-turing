@@ -27,8 +27,7 @@ class Config:
         self.last_attendance = None  # Period, see >> AttendanceMessage.py
 
         # Site URL
-        self.base_url = "turingbot.ml"
-        self.settings_url = "my." + self.base_url
+        self.settings_url = environ.get('DOMAIN')  # "turingbot.joffreybvn.be"
 
 
 config = Config()
