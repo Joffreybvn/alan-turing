@@ -5,7 +5,7 @@ from src.bot.scheduler.messages import Card, MessageWeight
 import time
 import random
 import operator
-from discord import Message
+from discord import Message, PartialMessage, TextChannel
 from pytz import timezone
 from typing import NamedTuple, Tuple, List, Union
 from src.bot.scheduler.messages import Message
@@ -126,6 +126,12 @@ class Reminder:
         # Append the users to mention
         return "".join([f"{text}\n"] + [f" <@{user}>" for user in users])
 
+    @staticmethod
+    async def __remove_last_message(channel: TextChannel):
+
+        message: PartialMessage = channel.get_partial_message(config.last_message)
+        await message.delete()
+
     def __initialize(self, name: str, days: str, hour: int, minute: int) -> None:
         """
         The core of the Reminder class: This function create a scheduler to
@@ -139,6 +145,9 @@ class Reminder:
             nonlocal self
 
             channel = config.discord.get_channel(config.DISCORD_CHANNEL_ID)
+
+            # Remove the last attendance message
+            await self.__remove_last_message(channel)
 
             # Simulate the bot typing during 3 seconds
             async with channel.typing():
