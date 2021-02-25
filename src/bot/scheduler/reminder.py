@@ -129,8 +129,9 @@ class Reminder:
     @staticmethod
     async def __remove_last_message(channel: TextChannel):
 
-        message: PartialMessage = channel.get_partial_message(config.last_message)
-        await message.delete()
+        if last_message_id := config.last_message:
+            message: PartialMessage = channel.get_partial_message(last_message_id)
+            await message.delete()
 
     def __initialize(self, name: str, days: str, hour: int, minute: int) -> None:
         """
